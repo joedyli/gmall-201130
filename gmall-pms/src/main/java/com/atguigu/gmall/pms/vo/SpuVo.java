@@ -12,5 +12,5 @@ public class SpuVo extends SpuEntity {
 
     private List<SpuAttrValueVo> baseAttrs;
 
-    private List<?> skus;
+    private List<SkuVo> skus;
 }
