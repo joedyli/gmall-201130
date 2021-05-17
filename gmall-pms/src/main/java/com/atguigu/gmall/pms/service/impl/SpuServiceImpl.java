@@ -9,6 +9,7 @@ import com.atguigu.gmall.sms.vo.SkuSaleVo;
 import com.atguigu.gmall.pms.vo.SkuVo;
 import com.atguigu.gmall.pms.vo.SpuAttrValueVo;
 import com.atguigu.gmall.pms.vo.SpuVo;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +90,7 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
         return new PageResultVo(page);
     }
 
-    @Transactional(readOnly = true)
+    @GlobalTransactional
     @Override
     public void bigSave(SpuVo spu) throws FileNotFoundException {
         // 1.保存spu相关信息
@@ -100,11 +101,11 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
         //this.saveSpuDesc(spu, spuId);
         this.descService.saveSpuDesc(spu, spuId);
 
-        try {
-            TimeUnit.SECONDS.sleep(4);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TimeUnit.SECONDS.sleep(4);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         //int i = 1/0;
         //FileInputStream xxx = new FileInputStream("xxx");
 
@@ -113,6 +114,8 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
 
         // 2.保存sku相关信息
         saveSkuInfo(spu, spuId);
+
+        //int i = 1/0;
 
     }
 
