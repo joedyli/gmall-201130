@@ -19,6 +19,8 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.ResponseVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 
+import javax.ws.rs.GET;
+
 /**
  * spu属性值
  *
@@ -33,6 +35,15 @@ public class SpuAttrValueController {
 
     @Autowired
     private SpuAttrValueService spuAttrValueService;
+
+    @GetMapping("search/{cid}")
+    public ResponseVo<List<SpuAttrValueEntity>> querySearchAttrValuesByCidAndSpuId(
+            @PathVariable("cid")Long cid,
+            @RequestParam("spuId")Long spuId
+    ){
+        List<SpuAttrValueEntity> spuAttrValueEntities = this.spuAttrValueService.querySearchAttrValuesByCidAndSpuId(cid, spuId);
+        return ResponseVo.ok(spuAttrValueEntities);
+    }
 
     /**
      * 列表

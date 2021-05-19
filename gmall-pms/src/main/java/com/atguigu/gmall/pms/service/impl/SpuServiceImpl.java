@@ -175,8 +175,6 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
         }
     }
 
-
-
     private Long saveSpuInfo(SpuVo spu) {
         spu.setCreateTime(new Date());
         spu.setUpdateTime(spu.getCreateTime());
