@@ -33,6 +33,6 @@ public class SearchParamVo {
     // 仅显示有货
     private Boolean store;
 
-    private Integer pageNum;
+    private Integer pageNum = 1;
     private final Integer pageSize = 20;
 }
