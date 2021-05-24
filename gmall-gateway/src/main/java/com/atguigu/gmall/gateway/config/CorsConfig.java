@@ -15,6 +15,8 @@ public class CorsConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("http://manager.gmall.com");
         corsConfiguration.addAllowedOrigin("http://localhost:1000");
+        corsConfiguration.addAllowedOrigin("http://gmall.com");
+        corsConfiguration.addAllowedOrigin("http://www.gmall.com");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.setAllowCredentials(true);
