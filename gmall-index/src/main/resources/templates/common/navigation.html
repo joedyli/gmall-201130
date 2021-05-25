@@ -66,9 +66,11 @@
             methods: {
                 loadSubCategories(category){
                     console.log("你触发了鼠标移动事件")
-                    axios.get("http://api.gmall.com/index/cates/" + category.id).then(({data}) => {
-                        category.subs = data.data;
-                    })
+                    if (category.subs == null || category.subs == undefined) {
+                        axios.get("http://api.gmall.com/index/cates/" + category.id).then(({data}) => {
+                            category.subs = data.data;
+                        })
+                    }
                 }
             }
         })
