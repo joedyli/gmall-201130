@@ -26,7 +26,6 @@ public class IndexController {
 
         // TODO: 加载广告
 
-
         return "index";
     }
 
@@ -44,4 +43,38 @@ public class IndexController {
         return ResponseVo.ok();
     }
 
+    @GetMapping("index/test/read")
+    @ResponseBody
+    public ResponseVo testRead(){
+        this.indexService.testRead();
+        return ResponseVo.ok();
+    }
+
+    @GetMapping("index/test/write")
+    @ResponseBody
+    public ResponseVo testWrite(){
+        this.indexService.testWrite();
+        return ResponseVo.ok();
+    }
+
+    @GetMapping("index/test/semaphore")
+    @ResponseBody
+    public ResponseVo testsSemaphore(){
+        this.indexService.testsSemaphore();
+        return ResponseVo.ok();
+    }
+
+    @GetMapping("index/test/latch")
+    @ResponseBody
+    public ResponseVo testsLatch(){
+        this.indexService.testsLatch();
+        return ResponseVo.ok("班长锁门。。。。。");
+    }
+
+    @GetMapping("index/test/countDown")
+    @ResponseBody
+    public ResponseVo testsCountDown(){
+        this.indexService.testsCountDown();
+        return ResponseVo.ok("出来了一位同学");
+    }
 }
