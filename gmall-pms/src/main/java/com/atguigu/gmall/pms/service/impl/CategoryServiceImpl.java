@@ -3,6 +3,7 @@ package com.atguigu.gmall.pms.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UnknownFormatConversionException;
@@ -47,6 +48,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     @Override
     public List<CategoryEntity> queryLvl2WithSubByPid(Long pid) {
         return this.categoryMapper.querySubCategoriesByPid(pid);
+    }
+
+    @Override
+    public List<CategoryEntity> queryLvl123CatesByCid3(Long cid) {
+        // 查询三级分类
+        CategoryEntity categoryEntity3 = this.getById(cid);
+        if (categoryEntity3 == null){
+            return null;
+        }
+        // 查询二级分类
+        CategoryEntity categoryEntity2 = this.getById(categoryEntity3.getParentId());
+        // 查询一级分类
+        CategoryEntity categoryEntity = this.getById(categoryEntity2.getParentId());
+        return Arrays.asList(categoryEntity, categoryEntity2, categoryEntity3);
     }
 
 }

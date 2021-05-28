@@ -19,6 +19,8 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.ResponseVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 
+import javax.ws.rs.Path;
+
 /**
  * 商品三级分类
  *
@@ -33,6 +35,12 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @GetMapping("all/{cid}")
+    public ResponseVo<List<CategoryEntity>> queryLvl123CatesByCid3(@PathVariable("cid")Long cid){
+        List<CategoryEntity> categoryEntities = this.categoryService.queryLvl123CatesByCid3(cid);
+        return ResponseVo.ok(categoryEntities);
+    }
 
     @GetMapping("subs/{pid}")
     public ResponseVo<List<CategoryEntity>> queryLvl2WithSubByPid(@PathVariable("pid")Long pid){

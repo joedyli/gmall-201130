@@ -6,6 +6,9 @@ import com.atguigu.gmall.index.config.GmallCache;
 import com.atguigu.gmall.index.feign.GmallPmsClient;
 import com.atguigu.gmall.index.utils.DistributedLock;
 import com.atguigu.gmall.pms.entity.CategoryEntity;
+import com.google.common.base.Charsets;
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,11 +102,11 @@ public class IndexService {
         int num = Integer.parseInt(numString);
         this.redisTemplate.opsForValue().set("num", String.valueOf(++num));
 
-        try {
-            TimeUnit.SECONDS.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TimeUnit.SECONDS.sleep(200);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         lock.unlock();
     }
@@ -214,4 +217,34 @@ public class IndexService {
         //。。。。
         cdl.countDown();
     }
+
+//    public static void main(String[] args) {
+//        BloomFilter<CharSequence> bloomFilter = BloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), 20, 0.3);
+//        bloomFilter.put("1");
+//        bloomFilter.put("2");
+//        bloomFilter.put("3");
+//        bloomFilter.put("4");
+//        bloomFilter.put("5");
+//        bloomFilter.put("6");
+//        bloomFilter.put("7");
+//        System.out.println(bloomFilter.mightContain("1"));
+//        System.out.println(bloomFilter.mightContain("3"));
+//        System.out.println(bloomFilter.mightContain("5"));
+//        System.out.println(bloomFilter.mightContain("7"));
+//        System.out.println(bloomFilter.mightContain("9"));
+//        System.out.println(bloomFilter.mightContain("10"));
+//        System.out.println(bloomFilter.mightContain("11"));
+//        System.out.println(bloomFilter.mightContain("12"));
+//        System.out.println(bloomFilter.mightContain("13"));
+//        System.out.println(bloomFilter.mightContain("14"));
+//        System.out.println(bloomFilter.mightContain("15"));
+//        System.out.println(bloomFilter.mightContain("16"));
+//        System.out.println(bloomFilter.mightContain("17"));
+//        System.out.println(bloomFilter.mightContain("18"));
+//        System.out.println(bloomFilter.mightContain("19"));
+//        System.out.println(bloomFilter.mightContain("20"));
+//        System.out.println(bloomFilter.mightContain("21"));
+//        System.out.println(bloomFilter.mightContain("22"));
+//        System.out.println(bloomFilter.mightContain("23"));
+//    }
 }
