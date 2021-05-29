@@ -125,7 +125,7 @@
 						<!--图片预览-->
 						<div id="preview" class="spec-preview">
 							<span class="jqzoom">
-								<img th:jqimg="*{defaultImage}" th:src="*{defaultImage}" width="400" height="400" />
+								<img th:jqimg="*{defaultImages}" th:src="*{defaultImages}" width="400" height="400" />
 							</span>
 						</div>
 						<!--下方的缩略图-->
@@ -134,7 +134,7 @@
 							<!--左右按钮-->
 							<div class="items">
 								<ul>
-									<li th:each="image : *{images}">
+									<li th:each="image : *{images}" >
 										<img th:src="${image.url}" th:bimg="${image.url}" onmousemove="preview(this)" />
 									</li>
 								</ul>
@@ -221,7 +221,7 @@
 										<i>选择{{attr.attrName}}</i>
 									</div>
 								</dt>
-								<dd v-for="attrValue,index in attr.attrValues" :key="index" @click="saleAttr[attr.attrId]=attrValue">
+								<dd v-for="attrValue,index in attr.attrValue" :key="index" @click="saleAttr[attr.attrId]=attrValue">
 									<a href="javascript:;" :class="{'selected':attrValue === saleAttr[attr.attrId]}">{{attrValue}}</a>
 								</dd>
 							</dl>
@@ -502,7 +502,7 @@
                                     <div class="Ptable-item" th:each="group : *{groups}">
                                         <h3 th:text="${group.groupName}">主体</h3>
                                         <dl>
-                                            <div th:each="attr : ${group.attrValues}">
+                                            <div th:each="attr : ${group.attrs}">
                                                 <dt th:text="${attr.attrName}">品牌</dt><dd th:text="${attr.attrValue}">华为（HUAWEI）</dd>
                                             </div>
                                         </dl>

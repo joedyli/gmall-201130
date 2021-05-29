@@ -2,6 +2,7 @@ package com.atguigu.gmall.item.vo;
 
 import com.atguigu.gmall.pms.entity.CategoryEntity;
 import com.atguigu.gmall.pms.entity.SkuImagesEntity;
+import com.atguigu.gmall.pms.vo.ItemGroupVo;
 import com.atguigu.gmall.pms.vo.SaleAttrValueVo;
 import com.atguigu.gmall.sms.vo.ItemSaleVo;
 import lombok.Data;
@@ -37,7 +38,7 @@ public class ItemVo {
     private List<SkuImagesEntity> images;
 
     // 是否有货
-    private Boolean store;
+    private Boolean store = false;
 
     // 销售属性列表
     // [
@@ -48,7 +49,7 @@ public class ItemVo {
     private List<SaleAttrValueVo> saleAttrs;
 
     // 当前sku的销售属性
-    // {3: 白天白, 4: 8G, 6: 128G}
+    // {4: 白天白, 5: 8G, 6: 128G}
     private Map<Long, String> saleAttr;
 
     // 销售属性组合与skuId的映射关系
