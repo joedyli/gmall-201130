@@ -50,6 +50,7 @@ public class CartService {
     private GmallSmsClient smsClient;
 
     private static final String KEY_PREFIX = "cart:info:";
+    private static final String PRICE_PREFIX = "cart:price:";
 
     public void addCart(Cart cart) {
         // 获取登录状态：userId userKey
@@ -102,7 +103,9 @@ public class CartService {
             List<ItemSaleVo> itemSaleVos = salesResponseVo.getData();
             cart.setSales(JSON.toJSONString(itemSaleVos));
 
-            this.asyncService.insertCart(cart);
+            this.asyncService.insertCart(userId, cart);
+            // 添加实时价格缓存
+            this.redisTemplate.opsForValue().set(PRICE_PREFIX + skuId, skuEntity.getPrice().toString());
         }
         hashOps.put(skuId, JSON.toJSONString(cart));
     }
@@ -168,7 +171,12 @@ public class CartService {
         List<Object> unLoginCartJsons = unLoginHashOps.values();
         List<Cart> unLoginCarts = null;
         if (!CollectionUtils.isEmpty(unLoginCartJsons)){
-            unLoginCarts = unLoginCartJsons.stream().map(json -> JSON.parseObject(json.toString(), Cart.class)).collect(Collectors.toList());
+            unLoginCarts = unLoginCartJsons.stream().map(json -> {
+                Cart cart = JSON.parseObject(json.toString(), Cart.class);
+                // 查询购物车实时价格缓存
+                cart.setCurrentPrice(new BigDecimal(this.redisTemplate.opsForValue().get(PRICE_PREFIX + cart.getSkuId())));
+                return cart;
+            }).collect(Collectors.toList());
         }
 
         // 2.获取userId，判断是否为空，为空则直接返回未登录的购物车
@@ -192,7 +200,7 @@ public class CartService {
                 } else {
                     cart.setUserId(userId.toString());
                     // 异步写入mysql
-                    this.asyncService.insertCart(cart);
+                    this.asyncService.insertCart(userId.toString(), cart);
                 }
                 // 写入redis
                 loginHashOps.put(skuId, JSON.toJSONString(cart));
@@ -206,7 +214,11 @@ public class CartService {
         // 5.获取已登录的购物车，并返回
         List<Object> loginCartJsons = loginHashOps.values();
         if (!CollectionUtils.isEmpty(loginCartJsons)){
-            return loginCartJsons.stream().map(json -> JSON.parseObject(json.toString(), Cart.class)).collect(Collectors.toList());
+            return loginCartJsons.stream().map(json -> {
+                Cart cart = JSON.parseObject(json.toString(), Cart.class);
+                cart.setCurrentPrice(new BigDecimal(this.redisTemplate.opsForValue().get(PRICE_PREFIX + cart.getSkuId())));
+                return cart;
+            }).collect(Collectors.toList());
         }
         return null;
     }
