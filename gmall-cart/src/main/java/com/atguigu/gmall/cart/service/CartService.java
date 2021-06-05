@@ -251,4 +251,14 @@ public class CartService {
         this.asyncService.deleteCartByUserIdAndSkuId(userId, skuId);
 
     }
+
+    public List<Cart> queryCheckedCartsByUserId(Long userId) {
+
+        BoundHashOperations<String, Object, Object> hashOps = this.redisTemplate.boundHashOps(KEY_PREFIX + userId);
+        List<Object> cartJsons = hashOps.values();
+        if (CollectionUtils.isEmpty(cartJsons)){
+            return null;
+        }
+        return cartJsons.stream().map(cartJson -> JSON.parseObject(cartJson.toString(), Cart.class)).filter(Cart::getCheck).collect(Collectors.toList());
+    }
 }
