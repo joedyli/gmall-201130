@@ -1,5 +1,5 @@
 server:
-  port: 18085
+  port: 18093
 spring:
   cloud:
     nacos:
@@ -17,31 +17,25 @@ spring:
   sleuth:
     sampler:
       probability: 1
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://172.16.116.100:3306/guli_oms
-    username: root
-    password: root
-  redis:
-    host: 172.16.116.100
+  thymeleaf:
+    cache: false
   rabbitmq:
     host: 172.16.116.100
+    port: 5672
     virtual-host: /fengge
     username: fengge
     password: fengge
     publisher-confirm-type: correlated
     publisher-returns: true
-    listener:
-      simple:
-        prefetch: 1
-        concurrency: 4
-        acknowledge-mode: manual
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.16.116.100:3306/guli_payment
+    username: root
+    password: root
 feign:
   sentinel:
     enabled: true
 mybatis-plus:
-  mapper-locations: classpath:mapper/oms/**/*.xml
-  type-aliases-package: com.atguigu.gmall.oms.entity
   global-config:
     db-config:
       id-type: auto

@@ -27,11 +27,8 @@ spring:
     virtual-host: /fengge
     username: fengge
     password: fengge
-    listener:
-      simple:
-        prefetch: 1
-        concurrency: 4
-        acknowledge-mode: manual
+    publisher-confirm-type: correlated
+    publisher-returns: true
 feign:
   sentinel:
     enabled: true
