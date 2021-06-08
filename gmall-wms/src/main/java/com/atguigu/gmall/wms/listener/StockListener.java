@@ -65,4 +65,40 @@ public class StockListener {
 
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     }
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue("STOCK_MINUS_QUEUE"),
+            exchange = @Exchange(value = "ORDER_EXCHANGE", ignoreDeclarationExceptions = "true", type = ExchangeTypes.TOPIC),
+            key = {"stock.minus"}
+    ))
+    public void minus(String orderToken, Channel channel, Message message) throws IOException {
+        if (StringUtils.isBlank(orderToken)){
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            return;
+        }
+
+        // 从redis中获取锁定库存的信息
+        String json = this.redisTemplate.opsForValue().get(KEY_PREFIX + orderToken);
+        if (StringUtils.isBlank(json)){
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            return;
+        }
+
+        // 反序列化获取锁定库存信息
+        List<SkuLockVo> skuLockVos = JSON.parseArray(json, SkuLockVo.class);
+        if (CollectionUtils.isEmpty(skuLockVos)){
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            return;
+        }
+
+        // 解锁库存
+        skuLockVos.forEach(skuLockVo -> {
+            this.wareSkuMapper.minus(skuLockVo.getWareSkuId(), skuLockVo.getCount());
+        });
+
+        // 删除锁定库存的缓存信息
+        this.redisTemplate.delete(KEY_PREFIX + orderToken);
+
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+    }
 }

@@ -57,4 +57,24 @@ public class OrderListener {
 
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     }
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue("OMS_PAY_QUEUE"),
+            exchange = @Exchange(value = "ORDER_EXCHANGE", ignoreDeclarationExceptions = "true", type = ExchangeTypes.TOPIC),
+            key = {"order.pay"}
+    ))
+    public void payOrder(String orderToken, Channel channel, Message message) throws IOException {
+        if (StringUtils.isBlank(orderToken)){
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            return;
+        }
+
+        // 更新订单状态为待发货状态
+        if (this.orderMapper.updateStatus(orderToken, 0, 1) == 1) {
+            // 发送消息给wms减库存
+            this.rabbitTemplate.convertAndSend("ORDER_EXCHANGE", "stock.minus", orderToken);
+        }
+
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+    }
 }
